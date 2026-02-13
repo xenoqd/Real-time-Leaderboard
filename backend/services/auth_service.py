@@ -11,6 +11,7 @@ from fastapi.exceptions import HTTPException
 
 
 class AuthService:
+    @staticmethod
     async def register(
         response: Response,
         session: AsyncSession,
@@ -61,6 +62,7 @@ class AuthService:
         )
         return user
 
+    @staticmethod
     async def login(
         response: Response,
         session: AsyncSession,
