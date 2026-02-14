@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from backend.services.leaderboard_service import rebuild_leaderboard
 from backend.db.session import init_db
 
 from backend.api.v1.leaderboard.leaderboard import leaderboard_router
@@ -14,6 +15,7 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     await init_db()
+    await rebuild_leaderboard()
 
 
 app.include_router(auth_router)

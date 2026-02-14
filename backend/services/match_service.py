@@ -122,58 +122,37 @@ class MatchService:
         await MatchRepository.update_match(session, match)
 
         if match.status == MatchStatus.finished:
-            if match.winner_id is not None:
-                winner_id = match.winner_id
-                winner_points = 25
-                winner_result = "win"
+            winner_id = match.winner_id
 
-                loser_id = match.player_x_id if winner_id == match.player_o_id else match.player_o_id
+            if winner_id is not None:
+                winner_points = 15
+                winner_result = "win"
                 loser_points = 5
                 loser_result = "loss"
             else:
-                winner_id = None
-                winner_points = 12
-                winner_result = "draw"
-                loser_id = None
-                loser_points = 12
-                loser_result = "draw"
+                winner_points = loser_points = 12
+                winner_result = loser_result = "draw"
 
-            if match.player_x_id:
-                if match.player_x_id == winner_id:
-                    px_points = winner_points
-                    px_result = winner_result
-                elif winner_id is None:
-                    px_points = 12
-                    px_result = "draw"
+            for player_id in [match.player_x_id, match.player_o_id]:
+                if not player_id:
+                    continue
+
+                if winner_id is None:
+                    points = 12
+                    result = "draw"
+                elif player_id == winner_id:
+                    points = winner_points
+                    result = winner_result
                 else:
-                    px_points = 5
-                    px_result = "loss"
+                    points = loser_points
+                    result = loser_result
 
                 await ScoreService.add_points(
                     session=session,
-                    user_id=match.player_x_id,
-                    points=px_points,
+                    user_id=player_id,
+                    points=points,
                     match_id=match.id,
-                    result=px_result
-                )
-
-            if match.player_o_id:
-                if match.player_o_id == winner_id:
-                    po_points = winner_points
-                    po_result = winner_result
-                elif winner_id is None:
-                    po_points = 12
-                    po_result = "draw"
-                else:
-                    po_points = 5
-                    po_result = "loss"
-
-                await ScoreService.add_points(
-                    session=session,
-                    user_id=match.player_o_id,
-                    points=po_points,
-                    match_id=match.id,
-                    result=po_result
+                    result=result
                 )
 
         return {

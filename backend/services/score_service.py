@@ -35,6 +35,7 @@ class ScoreService:
         )
         score.created_at = datetime.utcnow()
 
+        await ScoreRepository.update_score(session, score)
         await update_score(user_id, points)
-
-        return await ScoreRepository.update_score(session, score)
+        
+        return score
