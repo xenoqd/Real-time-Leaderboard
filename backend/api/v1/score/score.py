@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 
-from backend.schemas.score import ScoreCreate
 from backend.core.dependencies.current_user import get_current_user
 
 from backend.db.session import get_session
