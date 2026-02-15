@@ -13,7 +13,7 @@ Project based on <https://roadmap.sh/projects/realtime-leaderboard-system> chall
 
 Requirements:
 
-* Python 3.8=>
+* Python 3.8+
 
 * PostgreSQL
 
